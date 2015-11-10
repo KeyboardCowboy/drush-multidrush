@@ -1,0 +1,16 @@
+{
+  "name": "keyboardcowboy/drush-multidrush",
+  "type": "drupal-drush",
+  "description": "Manage multiple versions of Drush.",
+  "require": {
+    "php": ">=5.3.0",
+    "composer/installers": "~1.0"
+  },
+  "license": "GPL-2.0+",
+  "authors": [{
+    "name": "Chris Albrecht",
+    "email": "chris@lullabot.com"
+  }],
+  "keywords": ["drush"],
+  "homepage": "https://github.com/KeyboardCowboy/drush-multidrush"
+}
