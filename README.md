@@ -7,7 +7,8 @@ either `composer.phar` or `composer`.
 
 There is [an issue](https://github.com/KeyboardCowboy/drush-multidrush/issues/1) 
 to provide additional download options, but it adds significant complexity and 
-time.  It's probably easier to [install composer](https://getcomposer.org/).
+time.  I promise I'll work on it, but for now it's probably easier to
+simply [install composer](https://getcomposer.org/).
 
 ## Why?
 Each version of Drupal requires a different version of Drush.  If you are
