@@ -1,6 +1,14 @@
 # MultiDrush
 Manage multiple versions of Drush on your server.
 
+## Requirements
+Currently you must have composer installed and discoverable in your `$PATH` as
+either `composer.phar` or `composer`.
+
+There is [an issue](https://github.com/KeyboardCowboy/drush-multidrush/issues/1) 
+to provide additional download options, but it adds significant complexity and 
+time.  It's probably easier to [install composer](https://getcomposer.org/).
+
 ## Why?
 Each version of Drupal requires a different version of Drush.  If you are
 running multiple versions of Drupal, you will need multiple versions of Drush.

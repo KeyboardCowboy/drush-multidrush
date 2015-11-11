@@ -92,12 +92,12 @@ class MultiDrush {
     // If it's not empty, skip this installation.
     if ($this->dirIsEmpty($drush['subdir'])) {
       if ($composer = $this->getComposer()) {
-        if (drush_shell_exec("{$composer} -d={$path} require drush/drush {$drush['composer_version']}")) {
-          return TRUE;
-        }
-        return FALSE;
+        return drush_shell_exec("{$composer} -d={$path} require drush/drush {$drush['composer_version']}");
       }
-      return FALSE;
+      else {
+        // @todo: Provide alternative download methods.
+        // https://github.com/KeyboardCowboy/drush-multidrush/issues/1
+      }
     }
     else {
       return drush_log(dt("Drush {$version} is already installed.  Skipping."), 'status');

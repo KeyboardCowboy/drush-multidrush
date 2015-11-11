@@ -8,6 +8,9 @@ require_once __DIR__ . '/MultiDrush.class.php';
 
 /**
  * Implements hook_drush_command().
+ *
+ * @todo: Create a command to update Drush verisons.
+ *   https://github.com/KeyboardCowboy/drush-multidrush/issues/3
  */
 function multidrush_drush_command() {
   $options = array(
@@ -39,6 +42,12 @@ function multidrush_drush_command() {
 /**
  * Command callback.
  * drush multidrush-init
+ *
+ * @todo: Allow users to specify which versions to download.
+ *   https://github.com/KeyboardCowboy/drush-multidrush/issues/2
+ *
+ * @todo: Allow users to choose the default version on init.
+ *   https://github.com/KeyboardCowboy/drush-multidrush/issues/4
  */
 function drush_multidrush_init() {
   // Get the directory to install to.
