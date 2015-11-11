@@ -22,8 +22,8 @@ drush and then symlink to whichever you want to use.
 * [Composer](https://getcomposer.org/)
 
 ## Roadmap
-The composer dependency is restrictive, I know.  I just need a little time (or 
-some help) to implement alternative download methods.
+The composer dependency is restrictive, I know.  I just need a little time ([or 
+some help](https://github.com/KeyboardCowboy/drush-multidrush/issues/1)) to implement alternative download methods.
 
 I could also use some help checking this cross-platform.  Currently it works
 great on my Mac.  That's all I know.
