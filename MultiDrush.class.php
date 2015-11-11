@@ -6,7 +6,10 @@
 
 class MultiDrush {
   // The directory to store drush libraries.
-  private $dir;
+  public $dir;
+
+  // The bin directory where the drush command will be located.
+  public $binDir;
 
   // The path to composer if it can be found.
   private $composer = NULL;
@@ -33,25 +36,25 @@ class MultiDrush {
   /**
    * Constructor.
    */
-  public function __construct() {}
-
-  /**
-   * Validate and set the destination directory.
-   *
-   * @param string $dir
-   *   The directory path.
-   *
-   * @return string|bool
-   *   The validated directory or FALSE.
-   */
-  public function setDir($dir) {
+  public function __construct($dir) {
+    // Set the destination directory.
     if (drush_mkdir($dir, TRUE)) {
       $this->dir = $dir;
-      return $this->dir;
     }
     else {
-      return FALSE;
+      return drush_set_error('INVALID_DIR', dt("Unable to create directory {$dir}."));
     }
+
+    // Set the bin directory.
+    $bin_dir = getenv('HOME') . '/.drush/bin';
+    if (drush_mkdir($dir, TRUE)) {
+      $this->binDir = $bin_dir;
+    }
+    else {
+      return drush_set_error('INVALID_DIR', dt("Unable to create bin directory {$dir}."));
+    }
+
+    return $this;
   }
 
   /**
@@ -76,15 +79,12 @@ class MultiDrush {
    */
   public function install($version) {
     // Check for valid versions.
-    if (!isset($this->drush[$version])) {
-      return drush_set_error(dt("Invalid version '{$version}' requested."));
+    if (!($drush = $this->validateVersion($version))) {
+      return FALSE;
     }
 
-    // Get the definition for the desired version.
-    $drush = $this->drush[$version];
-    $path = "{$this->dir}/{$drush['subdir']}";
-
     // Make sure the directory exists.
+    $path = "{$this->dir}/{$drush['subdir']}";
     if (!drush_mkdir($path, TRUE)) {
       return FALSE;
     }
@@ -93,9 +93,6 @@ class MultiDrush {
     if ($this->dirIsEmpty($drush['subdir'])) {
       if ($composer = $this->getComposer()) {
         if (drush_shell_exec("{$composer} -d={$path} require drush/drush {$drush['composer_version']}")) {
-          $source = "{$this->dir}/{$drush['subdir']}/{$drush['cmd_path']}";
-          $destination = "{$this->dir}/{$drush['subdir']}/drush";
-          drush_shell_exec("ln -sf {$source} {$destination}");
           return TRUE;
         }
         return FALSE;
@@ -105,6 +102,46 @@ class MultiDrush {
     else {
       return drush_log(dt("Drush {$version} is already installed.  Skipping."), 'status');
     }
+  }
+
+  /**
+   * Make sure the requested version is valid.
+   *
+   * @param int $version
+   *   The requested drush major version.
+   *
+   * @return bool|array
+   *   The drush metadata for the requested version or FALSE if not valid.
+   */
+  private function validateVersion($version) {
+    // Check for valid versions.
+    if (!isset($this->drush[$version])) {
+      return drush_set_error(dt("Invalid version 'drush {$version}' requested."));
+    }
+    else {
+      return $this->drush[$version];
+    }
+  }
+
+  /**
+   * Switch to a different major drush version.
+   *
+   * @param int $version
+   *   The version to switch to.
+   *
+   * @return bool
+   *   Return FALSE if the requested version is invalid.
+   */
+  public function switchVersion($version) {
+    // Check for valid versions.
+    if (!($drush = $this->validateVersion($version))) {
+      return FALSE;
+    }
+
+    $source = "{$this->dir}/{$drush['subdir']}/{$drush['cmd_path']}";
+    $destination = "{$this->binDir}/drush";
+
+    return drush_shell_exec("ln -sf {$source} {$destination}");
   }
 
   /**
@@ -146,7 +183,18 @@ class MultiDrush {
     return reset($stdout);
   }
 
-  public static function createDirectory() {
+  /**
+   * Detect/create the source directory for the drush libraries.
+   *
+   * @return string
+   *   The drush library directory.
+   */
+  public static function getDir() {
+    $dir = drush_get_option('multidrush-dir', getenv('HOME') . "/.drushlib");
+    if ($override_dir = drush_get_option('dir', FALSE, 'cli')) {
+      $dir = $override_dir;
+    }
 
+    return $dir;
   }
 }
