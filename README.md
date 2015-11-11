@@ -1,6 +1,11 @@
 # MultiDrush
 Manage multiple versions of Drush on your server.
 
+## References
+* [MultiDrush on Packagist](https://packagist.org/packages/keyboardcowboy/drush-multidrush)
+* [Install Drush](http://docs.drush.org/en/master/install/)
+* [Install Composer](https://getcomposer.org/download/)
+
 ## Requirements
 Currently you must have composer installed and discoverable in your `$PATH` as
 either `composer.phar` or `composer`.
